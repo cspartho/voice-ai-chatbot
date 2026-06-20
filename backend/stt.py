@@ -1,16 +1,3 @@
-"""Speech-to-text using faster-whisper (CTranslate2).
-
-The model is loaded lazily on first use so the server starts instantly and the
-(potentially large) model download only happens when transcription is first
-requested. faster-whisper decodes the audio with PyAV, so browser webm/opus
-blobs work without a separate ffmpeg install.
-
-Config via env vars:
-  WHISPER_MODEL        model size/name        (default: "base")
-  WHISPER_DEVICE       "cpu" | "cuda"         (default: "cpu")
-  WHISPER_COMPUTE_TYPE compute type           (default: "int8")
-"""
-
 import os
 import tempfile
 import threading

@@ -1,15 +1,3 @@
-"""Text-to-speech with Google Gemini (google-genai SDK).
-
-Gemini TTS returns raw PCM (16-bit, mono, ~24 kHz). Browsers can't play raw PCM,
-so we wrap it in a WAV container before returning it to the client.
-
-Reuses the same Gemini client (and API key) as llm.py.
-
-Config via env (from backend/.env):
-  GEMINI_TTS_MODEL  optional — defaults to "gemini-2.5-flash-preview-tts"
-  GEMINI_TTS_VOICE  optional — defaults to "Kore" (a prebuilt Gemini voice)
-"""
-
 import base64
 import io
 import os
@@ -51,9 +39,7 @@ def synthesize(text: str) -> bytes:
             response_modalities=["AUDIO"],
             speech_config=types.SpeechConfig(
                 voice_config=types.VoiceConfig(
-                    prebuilt_voice_config=types.PrebuiltVoiceConfig(
-                        voice_name=_VOICE
-                    )
+                    prebuilt_voice_config=types.PrebuiltVoiceConfig(voice_name=_VOICE)
                 )
             ),
         ),

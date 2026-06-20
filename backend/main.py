@@ -1,22 +1,3 @@
-"""Voice Agent backend — Step 1: FastAPI skeleton + WebSocket.
-
-Goals for this step:
-  * a running server,
-  * a WebSocket the React frontend can connect to,
-  * messages flowing both ways.
-
-The audio "transcription" is still mocked here (canned transcripts + sample
-audio URLs) — real STT / LLM / TTS land in later steps. The WebSocket message
-contract the frontend depends on is:
-
-  client -> server : binary frame containing the recorded audio blob
-                     (or a text frame for a ping/health check)
-  server -> client : JSON { type: "ready" }                       on connect
-                     JSON { type: "response", transcript, reply,   after audio
-                            audioUrl, bytes }
-                     JSON { type: "echo", text }                   for text pings
-"""
-
 import asyncio
 import os
 from contextlib import asynccontextmanager
@@ -34,26 +15,19 @@ from llm import generate_reply
 from stt import get_model, is_loaded, transcribe_bytes
 from tts import synthesize
 
-# Preload the Whisper model on startup so the *first* recording isn't slow.
-# Set WHISPER_PRELOAD=0 to disable (falls back to lazy load on first request).
+
 PRELOAD = os.getenv("WHISPER_PRELOAD", "1").lower() not in ("0", "false", "no")
 
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     if PRELOAD:
-        # Load in a background thread: the server boots and answers immediately,
-        # while the model warms up. get_model() is thread-safe, so a request
-        # that arrives mid-load simply waits for it to finish.
         asyncio.create_task(asyncio.to_thread(get_model))
     yield
 
 
 app = FastAPI(title="Voice Agent Backend", lifespan=lifespan)
 
-# CORS. In production the frontend is served same-origin (nginx proxies /api),
-# so CORS isn't strictly needed — but it keeps direct access and dev convenient.
-# Restrict via ALLOWED_ORIGINS (comma-separated) for a locked-down deployment.
 _origins = os.getenv("ALLOWED_ORIGINS", "*").strip()
 _allow_origins = ["*"] if _origins == "*" else [o.strip() for o in _origins.split(",") if o.strip()]
 app.add_middleware(
@@ -63,8 +37,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Free, hotlink-friendly sample clips standing in for synthesized speech (TTS)
-# of the agent's reply. Replaced with real TTS output in a later step.
+
 SAMPLE_AUDIO = [
     "https://samplelib.com/lib/preview/mp3/sample-3s.mp3",
     "https://samplelib.com/lib/preview/mp3/sample-6s.mp3",

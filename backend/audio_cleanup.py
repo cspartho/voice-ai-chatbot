@@ -1,18 +1,3 @@
-"""Local audio preprocessing to improve Whisper accuracy on noisy input.
-
-Pipeline (all local, no external services):
-  1. High-pass filter  — remove low-frequency hum/rumble (mains hum, HVAC, etc.)
-  2. Normalize loudness — bring quiet recordings up to a consistent target level
-  3. Clip guard        — keep samples in [-1, 1]
-
-Operates on a mono float32 waveform at a known sample rate (16 kHz — Whisper's
-native rate, produced by faster_whisper.audio.decode_audio).
-
-Note: we intentionally do NOT trim silence here — Whisper's built-in VAD filter
-already drops non-speech, and an extra trim step measurably hurt accuracy on
-clean audio (it dropped words) without helping noisy audio.
-"""
-
 import numpy as np
 from scipy.signal import butter, sosfilt
 

@@ -1,14 +1,3 @@
-"""LLM reply generation with Google Gemini (google-genai SDK).
-
-Takes the user's (transcribed) message plus recent conversation history and
-returns the agent's reply. Replies are kept short and plain since they'll be
-spoken aloud (TTS) in a later step.
-
-Config via env (loaded from backend/.env):
-  GEMINI_API_KEY   required — https://aistudio.google.com/app/apikey
-  GEMINI_MODEL     optional — defaults to "gemini-2.5-flash"
-"""
-
 import os
 import threading
 
