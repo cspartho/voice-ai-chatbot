@@ -15,7 +15,7 @@ clean, WhatsApp-style chat UI.
 ## 📸 Demo
 
 <p align="center">
-  <img src="docs/Screenshot.png" alt="Voice Agent screenshot" width="420" />
+  <img src="docs/Screenshot.png" alt="Voice Agent screenshot"/>
 </p>
 
 ---
